@@ -1,0 +1,15 @@
+services:
+  dashboard:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8501:8501"
+    command: >
+      sh -c "pip install -r requirements.txt &&
+             python scripts/generate_data.py &&
+             python scripts/run_pipeline.py &&
+             python streaming/producer_mock.py &&
+             python streaming/window_aggregation_mock.py &&
+             streamlit run dashboard/app.py --server.address 0.0.0.0"
